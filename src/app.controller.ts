@@ -6,10 +6,10 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { AppService } from './app.service';
+import { AppService } from './app.service.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { marked } from 'marked'
+import { marked } from 'marked';
 import type { Response } from 'express';
 
 @Controller()
@@ -24,13 +24,16 @@ export class AppController {
   @Get()
   async getHome(@Res({ passthrough: true }) res: Response): Promise<Response> {
     let readmeHtml: string;
-    
+
     try {
       const readmePath = path.join(process.cwd(), 'README.md');
       const readmeContent = fs.readFileSync(readmePath, 'utf8');
+
       readmeHtml = await marked.parse(readmeContent);
     } catch (error) {
-      readmeHtml = '<h1>Bem-vindo à API!</h1><p>A documentação está indisponível no momento.</p>';
+      console.error('Erro ao ler ou converter o README.md:', error);
+      readmeHtml =
+        '<h1>Bem-vindo à API!</h1><p>A documentação está indisponível no momento.</p>';
     }
 
     res.set('Content-Type', 'text/html');

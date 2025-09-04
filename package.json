@@ -5,6 +5,7 @@
   "description": "CEP Join é uma API RESTful gratuita que fornece informações de endereço completas a partir de um CEP",
   "private": false,
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
