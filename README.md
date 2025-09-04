@@ -1,98 +1,107 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+<img src="https://cep-join.vercel.app/static/logo.png" width="520" alt="Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p align="center"\>Uma API RESTful gratuita e otimizada para buscar endereços a partir de um CEP, utilizando múltiplos serviços para garantir alta disponibilidade e precisão dos dados.</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+-----
 
-## Description
+## Descrição
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A **CEP Join** é uma API construída com **NestJS** que resolve o problema de indisponibilidade de serviços de CEP. Em vez de depender de uma única fonte, ela consulta e une dados de múltiplas APIs de CEP (como ViaCEP, Brasil API e OpenCEP). Isso garante que, mesmo que uma API falhe, a sua requisição será atendida.
 
-## Project setup
+A API retorna os dados de endereço de forma unificada e normalizada, independentemente da fonte, facilitando a integração em qualquer aplicação.
 
-```bash
-$ yarn install
+-----
+
+## Rotas
+
+### 1\. Consultar CEP (Rota principal)
+
+Esta rota busca o endereço de um CEP, tentando diferentes APIs até encontrar um resultado válido.
+
+  * **URL:** `https://cep-join.vercel.app/:zipCode`
+  * **Método:** `GET`
+  * **Exemplo de URL:** `https://cep-join.vercel.app/01001000`
+
+### 2\. Consultar CEP com fonte específica
+
+Esta rota permite que você force a busca de um CEP em uma API específica.
+
+  * **URL:** `https://cep-join.vercel.app/:zipCode?source=:source`
+  * **Método:** `GET`
+  * **Parâmetros de Query:**
+      * `source`: Nome da API a ser consultada. Opções: `viacep`, `opencep` ou `brasilapi`.
+  * **Exemplo de URL:** `https://cep-join.vercel.app/01001000?source=viacep`
+
+-----
+
+## Formato de Resposta
+
+O formato de retorno da API é consistente e normalizado, retornando os seguintes campos em JSON:
+
+```json
+{
+  "zip_code": "01001-000",
+  "street": "Praça da Sé",
+  "neighborhood": "Sé",
+  "city": "São Paulo",
+  "state": "SP",
+  "source": "viacep"
+}
 ```
 
-## Compile and run the project
+-----
+
+## Desenvolvimento do Projeto
+
+Este projeto é um excelente exemplo de como o **NestJS** pode ser usado para criar serviços robustos e tolerantes a falhas.
+
+### Configuração
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+$ npm install
+# ou
+$ yarn
 ```
 
-## Run tests
+### Rodar a aplicação
 
 ```bash
-# unit tests
-$ yarn run test
+# modo de desenvolvimento
+$ npm run start
 
-# e2e tests
-$ yarn run test:e2e
+# modo de observação (watch mode)
+$ npm run start:dev
 
-# test coverage
-$ yarn run test:cov
+# modo de produção
+$ npm run start:prod
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Testes
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# testes de unidade
+$ npm run test
+
+# testes e2e
+$ npm run test:e2e
+
+# cobertura de testes
+$ npm run test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+-----
 
-## Resources
+## Contato e Suporte
 
-Check out a few resources that may come in handy when working with NestJS:
+  * **Autor:** Gerson Viana
+  * **GitHub:** [GitHub](https://github.com/VianaGerson)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Sinta-se à vontade para abrir uma *issue* para reportar bugs, sugerir melhorias ou fazer perguntas sobre o projeto.
 
-## Support
+-----
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Licença
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Este projeto é [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

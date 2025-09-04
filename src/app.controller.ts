@@ -4,18 +4,39 @@ import {
   Get,
   Param,
   Query,
+  Res,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import * as fs from 'fs';
+import * as path from 'path';
+import { marked } from 'marked'
+import type { Response } from 'express';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get('health')
+  getHealth(): string {
+    return 'OK';
+  }
+
   @Get()
-  getHello(): string {
-    return `CEP Join é uma API RESTful gratuita que fornece informações de endereço completas a partir de um CEP. 
-    Ela se conecta a múltiplos serviços de CEP, garantindo que você sempre receba os dados mais precisos e 
-    atualizados, mesmo que um dos serviços esteja temporariamente indisponível.`;
+  async getHome(@Res({ passthrough: true }) res: Response): Promise<Response> {
+    let readmeHtml: string;
+    
+    try {
+      const readmePath = path.join(process.cwd(), 'README.md');
+      const readmeContent = fs.readFileSync(readmePath, 'utf8');
+      readmeHtml = await marked.parse(readmeContent);
+    } catch (error) {
+      readmeHtml = '<h1>Bem-vindo à API!</h1><p>A documentação está indisponível no momento.</p>';
+    }
+
+    res.set('Content-Type', 'text/html');
+    res.send(readmeHtml);
+
+    return res;
   }
 
   @Get(':zipCode')
